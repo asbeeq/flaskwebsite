@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+{% for pr in proj %}
+ <div class="jumbotron">
+    <center><h1 class="display-3">{{ pr.project_name }}</h1>
+    <table class="table table-hover">
+      <tbody>
+        <tr>
+          <td colspan="2">Имя проекта - {{ pr.project_name }}</td>
+          <td><a href="{{ url_for('main.delete_project',id=pr.id) }}">удалить</button>  </td>
+          <td>
+            <form class="form-inline" action="{{ url_for('main.update_project') }}" method="POST">     
+              <input type="hidden" value="{{ pr.id }}" name="id">
+              <input class="form-control" style=" margin-left: auto; margin-right: 0.1em;" id="project_name" type="text" placeholder="Поменять название" name="project_name">
+              <button class="btn btn-primary" type="submit">обновить</button>    
+            </form> 
+          </td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr class="table-active">
+          <th scope="row">+ / -</th>
+          <th colspan="3">
+            <form  action="{{ url_for('main.add_task',id=pr.id) }}" method="POST">
+                <input class="form-control" type="text" name="task_name" placeholder="Название таски">
+                <input class="form-control" type='date' name="task_date">
+              <input class="form-control" type="number" id="rangeInput" name="rangeInput" min="1" max="5" value="4">
+                <input class="btn btn-primary" style=" margin-left: auto; margin-right: 0.1em;" type="submit" value="Добавить">
+              </form>
+          </th>
+        </tr>
+        <tr>
+             {% for ts in task %}
+                    {% if ts.project_id == pr.id %}
+                    {% if ts.task_status == False %}
+                       {% include '_priority.html' %}
+                    {% else %}
+                      <tr>
+                        <td>
+                         <a class="btn btn-primary" href="{{ url_for('main.delete_task',id=ts.id) }}">Удалить</a>
+                      </td>
+                      <td colspan="3" style="background-color: green; color: white;">
+                        Задание - {{ ts.task_name }} - выполнено 
+                      </td>
+                      </tr>
+                    {% endif %}
+                    {% endif %}
+                  {% endfor %}         
+        </tr>
+      </tbody>
+</table>
+</center>
+ </div>
+<br>
+<br>
+
+{% endfor %}
+<!-- you here =) -->
+<center><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Добавить проект</button></center>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Новый проект</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form action="{{ url_for('main.add_project') }}" method="POST">
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Название:</label>
+            <input type="text" class="form-control" id="recipient-name" name="name">
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            <button type="submit" class="btn btn-primary">Создать</button>
+          </div>
+      </form>
+    </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

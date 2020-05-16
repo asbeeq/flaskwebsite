@@ -1,0 +1,11 @@
+<tr data-index="{{ ts.id }}" data-position="{{ ts.position }}">
+	<td><a class="btn btn-success" href="{{ url_for('main.task_done',id=ts.id) }}">Завершить</a></td>
+	<td colspan="3" id="main_task">
+        <form action="{{ url_for('main.update_task',id=ts.id) }}" method="POST">
+          <input type="hidden" value="{{ts.task_name}}" name="task_oldname">
+          <input type="hidden" value="{{ts.date}}" name="task_olddate">
+        <input class="form-control" type="text" placeholder="{{ts.task_name}}" name="task_newname"><input class="form-control" type='date' name="task_newdate" >
+        <span>Дата завершения - {{ ts.date }}</span><br>
+        <span>Приоритет задачи - {{ ts.task_priority }}</span><br>
+       <button class="btn btn-primary" class="form-control-plaintext" type="submit" value="">Обновить</button><a class="btn btn-primary" href="{{ url_for('main.delete_task',id=ts.id) }}">Удалить</button></form></td>
+</tr>
